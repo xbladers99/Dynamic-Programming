@@ -1,0 +1,59 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+int drop(int n, int k)
+{
+    if(n==1)
+        return k;
+    if(k==1 || k==0)
+        return k;
+    int m = INT_MAX;
+    for(int i=1;i<=k;i++)
+    {
+        int x = max(drop(n-1,i-1), drop(n,k-i));
+        m = min(m,x);
+    }
+        //return min(max(drop(n-1,k-1), drop(n,k-i)) + 1);
+    return m + 1;
+}
+
+int drop_dp(int n,int k)
+{
+    int dp[n+1][k+1];
+    int i,j;
+    for(i=0;i<=k;i++)
+        dp[0][i] = 0;
+    for(i=0;i<=k;i++)
+        dp[1][i] = i;
+    for(i=0;i<=n;i++)
+        for(j=0;j<=1;j++)
+            dp[i][j] = j;
+    
+    for(i=2;i<=n;i++)
+    {
+        for(j=2;j<=k;j++)
+        {
+            int a = INT_MAX;
+            for(int x=1;x<=j;x++)
+            {
+                int m = max(dp[i-1][x-1], dp[i][j - x]) + 1;
+                a = min(a,m);
+            }
+            dp[i][j] = a;
+        }
+    }
+    return dp[n][k];
+}
+
+int main()
+{
+    int t;
+    cin>>t;
+    while(t--)
+    {
+        int n,k;
+        cin>>n>>k;
+        cout<<drop_dp(n,k)<<endl;
+    }
+	return 0;
+}
